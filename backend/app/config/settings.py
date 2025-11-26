@@ -3,7 +3,7 @@ from typing import Optional
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "sqlite:///./plum_opd.db"
+    DATABASE_URL: str = "postgresql://postgres:QgRDDYuasmHPnUWsEdmXiraFJtNYHues@trolley.proxy.rlwy.net:23090/railway"
     GEMINI_API_KEY: str
     UPLOAD_DIR: str = "./uploads"
     MAX_UPLOAD_SIZE: int = 512
