@@ -19,8 +19,6 @@
 - [Running the Application](#running-the-application)
 - [API Documentation](#api-documentation)
 - [Project Structure](#project-structure)
-- [Testing](#testing)
-- [Deployment](#deployment)
 
 ## 🎯 Overview
 
@@ -386,3 +384,4 @@ This project is created as part of an internship assignment.
 
 **Built with ❤️ for automated insurance claim processing**
 #
+
