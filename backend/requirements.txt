@@ -1,3 +1,11 @@
+# Force CPU-only PyTorch (no CUDA)
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+torch==2.5.1+cpu
+torchvision==0.20.1+cpu
+torchaudio==2.5.1+cpu
+
+# Core FastAPI backend
 fastapi>=0.115.0
 uvicorn[standard]>=0.32.0
 pydantic>=2.10.0
@@ -7,9 +15,8 @@ sqlalchemy>=2.0.36
 alembic>=1.14.0
 python-dotenv==1.0.0
 
-# Docling for OCR
-docling>=2.0.0
-docling-core>=2.0.0
+# Docling full OCR (needs torch)
+docling==2.63.0
 
 # Google Gemini
 google-generativeai>=0.8.0
@@ -17,6 +24,8 @@ google-generativeai>=0.8.0
 # Image processing
 Pillow>=10.3.0
 python-magic
+
+# Use psycopg3 instead of psycopg2 (much lighter + PY3.13 compatible)
 psycopg[binary]>=3.2.0
 
 # Utilities
