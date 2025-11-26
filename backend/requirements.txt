@@ -9,8 +9,8 @@ sqlalchemy>=2.0.36
 alembic>=1.14.0
 python-dotenv==1.0.0
 
-# Docling core (works on Python 3.13, includes PDFReader)
-docling-core==2.49.0
+# PDF rendering (Railway compatible)
+pymupdf>=1.24.10
 
 # OCR engine
 rapidocr>=3.4.2
