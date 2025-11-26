@@ -1,23 +1,31 @@
---extra-index-url https://download.pytorch.org/whl/cpu
-
-torch==2.5.1+cpu
-
+# FastAPI backend
 fastapi>=0.115.0
 uvicorn[standard]>=0.32.0
+
 pydantic>=2.10.0
 pydantic-settings>=2.6.0
 python-multipart>=0.0.12
+
 sqlalchemy>=2.0.36
 alembic>=1.14.0
 python-dotenv==1.0.0
 
-docling==2.63.0
+# Docling CORE (NO ML, Python 3.13 compatible)
+docling-core==2.52.0
 
-google-generativeai>=0.8.0
+# OCR engine (Python 3.13 compatible)
+rapidocr>=3.4.2
 
+# Image processing
 Pillow>=10.3.0
 python-magic
-psycopg2-binary
 
+# PostgreSQL
+psycopg2-binary>=2.9.9
+
+# Utilities
 python-dateutil==2.8.2
 pytz==2023.3
+
+# Google Gemini SDK
+google-generativeai>=0.8.0
