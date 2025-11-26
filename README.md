@@ -176,7 +176,7 @@ Create a `.env` file in the `backend` directory:
 
 ```env
 # Database
-DATABASE_URL=postgresql://postgres:your_password@localhost:5432/plum_opd
+DATABASE_URL=postgresql://postgres:your_password@localhost:5432/name_of_Database
 
 # Google Gemini API
 GEMINI_API_KEY=your_gemini_api_key_here
@@ -402,15 +402,6 @@ This will test all 10 scenarios from `Instructions/test_cases.json`
 - [Implementation Summary](./IMPLEMENTATION_SUMMARY.md) - Detailed implementation notes
 - [Quick Start Guide](./QUICK_START.md) - Fast setup reference
 
-## 🤝 Contributing
-
-This is an assignment project. For production use, consider:
-- Adding comprehensive test suites
-- Implementing authentication
-- Adding real-time notifications
-- Building admin dashboard
-- Integrating with payment gateways
-
 ## 📄 License
 
 This project is created as part of an internship assignment.
@@ -432,5 +423,6 @@ For questions or issues:
 ---
 
 **Built with ❤️ for automated insurance claim processing**
-#   A I - P o w e r e d - O P D - C l a i m - A d j u d i c a t i o n - E n g i n e  
+#   A I - P o w e r e d - O P D - C l a i m - A d j u d i c a t i o n - E n g i n e 
+ 
  
