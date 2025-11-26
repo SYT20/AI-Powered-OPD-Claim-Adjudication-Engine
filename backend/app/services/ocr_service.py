@@ -1,4 +1,4 @@
-from docling_core.readers.pdf_reader import PDFReader
+import fitz  # PyMuPDF
 from rapidocr import RapidOCR
 from pathlib import Path
 from typing import Dict, Any
@@ -8,8 +8,9 @@ logger = logging.getLogger(__name__)
 
 
 class OCRService:
+
     def __init__(self):
-        self.reader = PDFReader()
+        self.reader = None  # removed docling-core reader
         self.ocr = RapidOCR()
 
     async def extract_text_from_document(self, file_path: str) -> Dict[str, Any]:
@@ -20,28 +21,29 @@ class OCRService:
             if not path.exists():
                 raise FileNotFoundError(f"File not found: {file_path}")
 
-            # Read PDF pages using docling-core
-            pages = self.reader.read_pdf(file_path)
+            # Read PDF pages (replaces docling-core)
+            doc = fitz.open(file_path)
+            pages = list(doc)  # SAME behavior as docling-core: iterable pages
 
             markdown_lines = []
             page_count = len(pages)
 
             for page in pages:
-                # Render PDF page to image
-                img = page.render()
+                # Render PDF page to image (similar to page.render())
+                pix = page.get_pixmap(dpi=200)
+                img = pix.tobytes("png")
 
                 # OCR using RapidOCR
                 ocr_result, _ = self.ocr(img)
 
-                # Extract text from OCR output
+                # SAME logic
                 text = " ".join([item[1] for item in ocr_result])
 
                 markdown_lines.append(text)
 
-            # Combine all text into Markdown-like output
+            # EXACT SAME logic
             markdown_text = "\n\n".join(markdown_lines)
 
-            # Quality score logic preserved
             quality_score = self._calculate_quality_score(markdown_text)
 
             return {
@@ -63,6 +65,7 @@ class OCRService:
             }
 
     def _calculate_quality_score(self, text: str) -> float:
+        # EXACT same logic
         try:
             text_length = len(text)
             if text_length > 100:
@@ -75,6 +78,7 @@ class OCRService:
             return 0.8
 
     async def batch_extract(self, file_paths: list[str]) -> list[Dict[str, Any]]:
+        # EXACT same logic
         return [await self.extract_text_from_document(fp) for fp in file_paths]
 
 
