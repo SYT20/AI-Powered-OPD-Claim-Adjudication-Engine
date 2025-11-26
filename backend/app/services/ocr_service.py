@@ -1,4 +1,4 @@
-from docling_core.pdf import PDFReader
+from docling_core.readers.pdf_reader import PDFReader
 from rapidocr import RapidOCR
 from pathlib import Path
 from typing import Dict, Any
@@ -20,29 +20,28 @@ class OCRService:
             if not path.exists():
                 raise FileNotFoundError(f"File not found: {file_path}")
 
-            # Read PDF pages
+            # Read PDF pages using docling-core
             pages = self.reader.read_pdf(file_path)
 
             markdown_lines = []
             page_count = len(pages)
 
             for page in pages:
-                # Render page to image
+                # Render PDF page to image
                 img = page.render()
 
-                # OCR the image
+                # OCR using RapidOCR
                 ocr_result, _ = self.ocr(img)
 
-                # Extract text only
-                text = " ".join([word[1] for word in ocr_result])
+                # Extract text from OCR output
+                text = " ".join([item[1] for item in ocr_result])
 
-                # Add to markdown lines
                 markdown_lines.append(text)
 
-            # Join all pages into one markdown-like text
+            # Combine all text into Markdown-like output
             markdown_text = "\n\n".join(markdown_lines)
 
-            # Quality score logic unchanged
+            # Quality score logic preserved
             quality_score = self._calculate_quality_score(markdown_text)
 
             return {
@@ -65,7 +64,6 @@ class OCRService:
 
     def _calculate_quality_score(self, text: str) -> float:
         try:
-            # Keep SAME LOGIC as your Docling version
             text_length = len(text)
             if text_length > 100:
                 return 0.9
@@ -73,17 +71,11 @@ class OCRService:
                 return 0.7
             else:
                 return 0.5
-
-        except Exception as e:
-            logger.warning(f"Could not calculate quality score: {e}")
+        except Exception:
             return 0.8
 
     async def batch_extract(self, file_paths: list[str]) -> list[Dict[str, Any]]:
-        results = []
-        for file_path in file_paths:
-            result = await self.extract_text_from_document(file_path)
-            results.append(result)
-        return results
+        return [await self.extract_text_from_document(fp) for fp in file_paths]
 
 
 ocr_service = OCRService()
