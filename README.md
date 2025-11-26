@@ -176,7 +176,7 @@ Create a `.env` file in the `backend` directory:
 
 ```env
 # Database
-DATABASE_URL=postgresql://postgres:your_password@localhost:5432/name_of_Database
+DATABASE_URL=postgresql://postgres:your_password@localhost:5432/plum_opd (your database name)
 
 # Google Gemini API
 GEMINI_API_KEY=your_gemini_api_key_here
@@ -365,42 +365,11 @@ This will test all 10 scenarios from `Instructions/test_cases.json`
 5. Submit claim
 6. View decision and reasoning
 
-## 🚢 Deployment
-
-### Production Considerations
-
-1. **Environment Variables**
-   - Use production database credentials
-   - Secure the Gemini API key
-   - Set proper CORS origins
-
-2. **Database**
-   - Enable PostgreSQL connection pooling
-   - Set up automated backups
-   - Configure proper indexes
-
-3. **Security**
-   - Enable HTTPS
-   - Add authentication/authorization
-   - Implement rate limiting
-   - Sanitize file uploads
-
-4. **Monitoring**
-   - Set up logging aggregation
-   - Add performance monitoring
-   - Configure error tracking
-
 ### Deployment Options
 
 - **Backend**: Railway, Render, AWS EC2, Google Cloud Run
 - **Frontend**: Vercel, Netlify, AWS S3 + CloudFront
 - **Database**: AWS RDS, Google Cloud SQL, Supabase
-
-## 📖 Additional Documentation
-
-- [Flow Diagrams](./OPD_CLAIM_FLOW_DIAGRAMS.md) - Complete system architecture diagrams
-- [Implementation Summary](./IMPLEMENTATION_SUMMARY.md) - Detailed implementation notes
-- [Quick Start Guide](./QUICK_START.md) - Fast setup reference
 
 ## 📄 License
 
@@ -413,16 +382,7 @@ This project is created as part of an internship assignment.
 - **Docling** - For OCR functionality
 - **FastAPI** - For the excellent web framework
 
-## 📞 Support
-
-For questions or issues:
-1. Check the [Quick Start Guide](./QUICK_START.md)
-2. Review [Flow Diagrams](./OPD_CLAIM_FLOW_DIAGRAMS.md)
-3. Check API documentation at `/docs`
-
 ---
 
 **Built with ❤️ for automated insurance claim processing**
-#   A I - P o w e r e d - O P D - C l a i m - A d j u d i c a t i o n - E n g i n e 
- 
- 
+#
