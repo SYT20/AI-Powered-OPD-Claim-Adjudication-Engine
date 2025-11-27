@@ -9,25 +9,16 @@ sqlalchemy>=2.0.36
 alembic>=1.14.0
 python-dotenv==1.0.0
 
-# Docling (CPU only)
+# Docling (requires CPU ONNX)
 docling==2.63.0
 docling-core==2.52.0
 docling-ibm-models==1.0.0
 
-# FORCE Docling to use ONNX CPU only (disable GPU backends)
-onnxruntime==1.17.0
-rapidocr==3.4.2
-rapidocr_onnxruntime==1.0.0
+# ONNX Runtime CPU ONLY (compatible with Python 3.13)
+onnxruntime>=1.20.0
 
-# Prevent Transformers from installing CUDA torch
-transformers==4.44.2
-accelerate==1.0.1
-tokenizers==0.20.1
-
-# HARD BLOCK PyTorch
-torch==0.0.0  # fake version to block install
-torchvision==0.0.0
-torchaudio==0.0.0
+# Optional RapidOCR ONNX (CPU only)
+rapidocr_onnxruntime>=1.3.2
 
 # Image processing
 Pillow>=10.3.0
