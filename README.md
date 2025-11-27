@@ -79,6 +79,8 @@ This system automates the adjudication (approval/rejection) of OPD insurance cla
 The system follows a layered architecture with clear separation of concerns:
 
 ![Architecture Diagram](Pipline.png)
+![Rule Enginw Diagram](RuleEnginw.png)
+![Decision Engine Diagram](DecisionEngine.png)
 
 For detailed flow diagrams, see [OPD_CLAIM_FLOW_DIAGRAMS.md](./OPD_CLAIM_FLOW_DIAGRAMS.md)
 
@@ -384,4 +386,5 @@ This project is created as part of an internship assignment.
 
 **Built with ❤️ for automated insurance claim processing**
 #
+
 
