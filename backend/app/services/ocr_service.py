@@ -1,63 +1,39 @@
-import fitz
-from google.generativeai import GenerativeModel
+from docling.document_converter import DocumentConverter
 from pathlib import Path
 from typing import Dict, Any
 import logging
-import base64
 
 logger = logging.getLogger(__name__)
 
-model = GenerativeModel("gemini-2.0-flash")
-
 
 class OCRService:
+    def __init__(self):
+        self.converter = DocumentConverter()
+    
     async def extract_text_from_document(self, file_path: str) -> Dict[str, Any]:
         try:
             logger.info(f"Starting OCR extraction for: {file_path}")
-
+            
             path = Path(file_path)
             if not path.exists():
                 raise FileNotFoundError(f"File not found: {file_path}")
-
-            doc = fitz.open(file_path)
-            markdown_lines = []
-
-            for page in doc:
-                pix = page.get_pixmap(dpi=200)
-                png_bytes = pix.tobytes("png")
-
-                encoded = base64.b64encode(png_bytes).decode()
-
-                # Send to Gemini Vision
-                result = model.generate_content(
-                    [
-                        {
-                            "mime_type": "image/png",
-                            "data": encoded
-                        },
-                        "Extract ALL text from this page."
-                    ]
-                )
-
-                text = result.text or ""
-                markdown_lines.append(text)
-
-            markdown_text = "\n\n".join(markdown_lines)
-
-            # same logic
-            page_count = len(doc)
-            quality_score = self._calculate_quality_score(markdown_text)
-
+            
+            result = self.converter.convert(file_path)
+            
+            markdown_text = result.document.export_to_markdown()
+            
+            quality_score = self._calculate_quality_score(result)
+            
             return {
                 "success": True,
                 "raw_text": markdown_text,
-                "page_count": page_count,
+                "page_count": len(result.pages) if hasattr(result, 'pages') else 1,
                 "confidence": quality_score,
                 "file_path": file_path
             }
-
+            
         except Exception as e:
-            logger.error(f"OCR extraction failed: {e}")
+            logger.error(f"OCR extraction failed for {file_path}: {str(e)}")
             return {
                 "success": False,
                 "error": str(e),
@@ -65,14 +41,33 @@ class OCRService:
                 "confidence": 0.0,
                 "file_path": file_path
             }
-
-    def _calculate_quality_score(self, text: str) -> float:
-        length = len(text)
-        if length > 100:
-            return 0.9
-        elif length > 50:
-            return 0.7
-        return 0.5
+    
+    def _calculate_quality_score(self, result) -> float:
+        try:
+            if hasattr(result, 'quality_score'):
+                return result.quality_score
+            
+            if hasattr(result, 'document') and hasattr(result.document, 'text'):
+                text_length = len(result.document.text)
+                if text_length > 100:
+                    return 0.9
+                elif text_length > 50:
+                    return 0.7
+                else:
+                    return 0.5
+            
+            return 0.8
+            
+        except Exception as e:
+            logger.warning(f"Could not calculate quality score: {e}")
+            return 0.8
+    
+    async def batch_extract(self, file_paths: list[str]) -> list[Dict[str, Any]]:
+        results = []
+        for file_path in file_paths:
+            result = await self.extract_text_from_document(file_path)
+            results.append(result)
+        return results
 
 
 ocr_service = OCRService()
