@@ -2,7 +2,7 @@
 
 torch==2.7.0+cpu
 torchvision==0.22.0+cpu
-# torchaudio removed – incompatible with PyTorch 2.7.0
+# torchaudio removed – incompatible with torch 2.7
 
 fastapi>=0.115.0
 uvicorn[standard]>=0.32.0
@@ -15,8 +15,11 @@ sqlalchemy>=2.0.36
 alembic>=1.14.0
 python-dotenv==1.0.0
 
+# Docling full OCR stack
 docling>=2.63.0
 docling-core>=2.49.0
+rapidocr>=3.4.2
+onnxruntime>=1.18.0 
 
 Pillow>=10.3.0
 python-magic
