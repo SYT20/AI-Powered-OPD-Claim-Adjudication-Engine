@@ -7,7 +7,7 @@ import base64
 
 logger = logging.getLogger(__name__)
 
-model = GenerativeModel("gemini-1.5-flash")
+model = GenerativeModel("gemini-2.0-flash")
 
 
 class OCRService:
