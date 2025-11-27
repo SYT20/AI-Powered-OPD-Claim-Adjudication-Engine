@@ -1,3 +1,6 @@
+import os
+os.environ["DOCLING_OCR_ENGINE"] = "rapidocr"   # <-- enable rapidocr in docling
+
 from docling.document_converter import DocumentConverter
 from pathlib import Path
 from typing import Dict, Any
@@ -5,10 +8,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class OCRService:
     def __init__(self):
-        # Force Docling to use RapidOCR as OCR backend
-        self.converter = DocumentConverter(ocr_engine="rapidocr")
+        # No args allowed in your version of Docling
+        self.converter = DocumentConverter()
     
     async def extract_text_from_document(self, file_path: str) -> Dict[str, Any]:
         try:
@@ -18,10 +22,10 @@ class OCRService:
             if not path.exists():
                 raise FileNotFoundError(f"File not found: {file_path}")
             
-            # Docling full pipeline (OCR + layout)
             result = self.converter.convert(file_path)
             
             markdown_text = result.document.export_to_markdown()
+            
             quality_score = self._calculate_quality_score(result)
             
             return {
