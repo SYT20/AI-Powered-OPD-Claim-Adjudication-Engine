@@ -8,7 +8,7 @@ export default defineConfig({
         port: 3000,
         proxy: {
             '/api': {
-                target: 'https://ai-powered-opd-claim-adjudication-engine-production.up.railway.app',
+                target: 'http://localhost:8000',
                 changeOrigin: true,
             },
         },
