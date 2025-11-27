@@ -8,15 +8,19 @@ import type {
     ClaimFilters
 } from '../types';
 
-// Create axios instance with base URL
+// ------------------------------
+// Axios Instance Configuration
+// ------------------------------
 const api = axios.create({
-    baseURL: '/api/v1',
+    baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api/v1`,   // ✅ Fixed for Vercel → Railway
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
+// ------------------------------
 // Members API
+// ------------------------------
 export const fetchMembers = async (): Promise<Member[]> => {
     const response = await api.get<Member[]>('/members');
     return response.data;
@@ -27,7 +31,9 @@ export const getMember = async (memberId: string): Promise<Member> => {
     return response.data;
 };
 
+// ------------------------------
 // Claims API
+// ------------------------------
 export const submitClaim = async (formData: FormData): Promise<ClaimSubmitResponse> => {
     const response = await api.post<ClaimSubmitResponse>('/claims', formData, {
         headers: {
@@ -52,7 +58,9 @@ export const getClaimDocuments = async (claimId: string): Promise<Document[]> =>
     return response.data;
 };
 
+// ------------------------------
 // Decisions API
+// ------------------------------
 export const getDecision = async (claimId: string): Promise<Decision> => {
     const response = await api.get<Decision>(`/decisions/${claimId}`);
     return response.data;
