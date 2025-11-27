@@ -1,18 +1,16 @@
-import fitz  # PyMuPDF
-from rapidocr import RapidOCR
+import fitz
+from google.generativeai import GenerativeModel
 from pathlib import Path
 from typing import Dict, Any
 import logging
+import base64
 
 logger = logging.getLogger(__name__)
 
+model = GenerativeModel("gemini-1.5-flash")
+
 
 class OCRService:
-
-    def __init__(self):
-        self.reader = None  # removed docling-core reader
-        self.ocr = RapidOCR()
-
     async def extract_text_from_document(self, file_path: str) -> Dict[str, Any]:
         try:
             logger.info(f"Starting OCR extraction for: {file_path}")
@@ -21,29 +19,33 @@ class OCRService:
             if not path.exists():
                 raise FileNotFoundError(f"File not found: {file_path}")
 
-            # Read PDF pages (replaces docling-core)
             doc = fitz.open(file_path)
-            pages = list(doc)  # SAME behavior as docling-core: iterable pages
-
             markdown_lines = []
-            page_count = len(pages)
 
-            for page in pages:
-                # Render PDF page to image (similar to page.render())
+            for page in doc:
                 pix = page.get_pixmap(dpi=200)
-                img = pix.tobytes("png")
+                png_bytes = pix.tobytes("png")
 
-                # OCR using RapidOCR
-                ocr_result, _ = self.ocr(img)
+                encoded = base64.b64encode(png_bytes).decode()
 
-                # SAME logic
-                text = " ".join([item[1] for item in ocr_result])
+                # Send to Gemini Vision
+                result = model.generate_content(
+                    [
+                        {
+                            "mime_type": "image/png",
+                            "data": encoded
+                        },
+                        "Extract ALL text from this page."
+                    ]
+                )
 
+                text = result.text or ""
                 markdown_lines.append(text)
 
-            # EXACT SAME logic
             markdown_text = "\n\n".join(markdown_lines)
 
+            # same logic
+            page_count = len(doc)
             quality_score = self._calculate_quality_score(markdown_text)
 
             return {
@@ -55,7 +57,7 @@ class OCRService:
             }
 
         except Exception as e:
-            logger.error(f"OCR extraction failed for {file_path}: {str(e)}")
+            logger.error(f"OCR extraction failed: {e}")
             return {
                 "success": False,
                 "error": str(e),
@@ -65,21 +67,12 @@ class OCRService:
             }
 
     def _calculate_quality_score(self, text: str) -> float:
-        # EXACT same logic
-        try:
-            text_length = len(text)
-            if text_length > 100:
-                return 0.9
-            elif text_length > 50:
-                return 0.7
-            else:
-                return 0.5
-        except Exception:
-            return 0.8
-
-    async def batch_extract(self, file_paths: list[str]) -> list[Dict[str, Any]]:
-        # EXACT same logic
-        return [await self.extract_text_from_document(fp) for fp in file_paths]
+        length = len(text)
+        if length > 100:
+            return 0.9
+        elif length > 50:
+            return 0.7
+        return 0.5
 
 
 ocr_service = OCRService()
