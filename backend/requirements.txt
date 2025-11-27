@@ -9,23 +9,13 @@ sqlalchemy>=2.0.36
 alembic>=1.14.0
 python-dotenv==1.0.0
 
-# Docling CPU ONLY (NO IBM MODELS)
-docling==2.63.0
-docling-core==2.52.0
-docling-parse==4.7.1
-
-# RAPIDOCR CPU ONLY
-onnxruntime>=1.20.0
-rapidocr_onnxruntime>=1.2.3
-
-# Image processing
+pymupdf>=1.24.10  # PDF to image
 Pillow>=10.3.0
 python-magic
 
-# DB
 psycopg2-binary>=2.9.9
+
+google-generativeai>=0.8.0
 
 python-dateutil==2.8.2
 pytz==2023.3
-
-google-generativeai>=0.8.0
