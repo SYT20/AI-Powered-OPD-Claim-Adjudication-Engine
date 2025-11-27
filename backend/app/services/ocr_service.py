@@ -1,37 +1,22 @@
-import os
-import logging
+from docling.document_converter import DocumentConverter
+from docling.datamodel.document import Document
 from pathlib import Path
 from typing import Dict, Any
-
-try:
-    import onnxruntime  # If installed, great
-except ImportError:
-    import types
-    fake_ort = types.ModuleType("onnxruntime")
-
-    class FakeSession:
-        def __init__(self, *args, **kwargs):
-            pass
-
-        def run(self, *args, **kwargs):
-            return []
-
-    fake_ort.InferenceSession = FakeSession
-    import sys
-
-    sys.modules["onnxruntime"] = fake_ort
-
-os.environ["DOCLING_OCR_ENGINE"] = "rapidocr"
-
-from docling.document_converter import DocumentConverter
+import logging
 
 logger = logging.getLogger(__name__)
 
 
 class OCRService:
     def __init__(self):
-        # Default Docling pipeline, now forced to enable RapidOCR
-        self.converter = DocumentConverter()
+        """
+        Use Docling in CPU-only mode.
+        RapidOCR / Torch / CUDA will NOT be used.
+        Docling will use 'onnxruntime' backend automatically.
+        """
+        self.converter = DocumentConverter(
+            ocr_options={"engine": "auto"}  # auto → uses ONNX (CPU)
+        )
 
     async def extract_text_from_document(self, file_path: str) -> Dict[str, Any]:
         try:
@@ -41,25 +26,29 @@ class OCRService:
             if not path.exists():
                 raise FileNotFoundError(f"File not found: {file_path}")
 
-            # Run Docling OCR
-            result = self.converter.convert(file_path)
+            # CPU-only OCR extraction
+            result = self.converter.convert(str(file_path))
 
-            # Markdown output (same logic as before)
+            # Extract Markdown text
             markdown_text = result.document.export_to_markdown()
+
+            # Count pages if available
+            page_count = (
+                len(result.pages) if hasattr(result, "pages") and result.pages else 1
+            )
 
             quality_score = self._calculate_quality_score(result)
 
             return {
                 "success": True,
                 "raw_text": markdown_text,
-                "page_count": len(result.pages) if hasattr(result, "pages") else 1,
+                "page_count": page_count,
                 "confidence": quality_score,
                 "file_path": file_path,
             }
 
         except Exception as e:
             logger.error(f"OCR extraction failed for {file_path}: {str(e)}")
-
             return {
                 "success": False,
                 "error": str(e),
@@ -74,13 +63,12 @@ class OCRService:
                 return result.quality_score
 
             if hasattr(result, "document") and hasattr(result.document, "text"):
-                text_length = len(result.document.text)
-                if text_length > 100:
+                text_len = len(result.document.text)
+                if text_len > 100:
                     return 0.9
-                elif text_length > 50:
+                elif text_len > 50:
                     return 0.7
-                else:
-                    return 0.5
+                return 0.5
 
             return 0.8
 
@@ -89,8 +77,8 @@ class OCRService:
 
     async def batch_extract(self, file_paths: list[str]) -> list[Dict[str, Any]]:
         results = []
-        for file_path in file_paths:
-            results.append(await self.extract_text_from_document(file_path))
+        for fp in file_paths:
+            results.append(await self.extract_text_from_document(fp))
         return results
 
 
