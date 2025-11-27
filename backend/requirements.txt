@@ -1,3 +1,9 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+torch==2.5.1+cpu
+torchvision==0.20.1+cpu
+torchaudio==2.5.1+cpu
+
 fastapi>=0.115.0
 uvicorn[standard]>=0.32.0
 
@@ -9,13 +15,20 @@ sqlalchemy>=2.0.36
 alembic>=1.14.0
 python-dotenv==1.0.0
 
-pymupdf>=1.24.10  # PDF to image
+# Docling full OCR
+docling>=2.63.0
+docling-core>=2.49.0
+
+# Image processing
 Pillow>=10.3.0
 python-magic
 
+# Database
 psycopg2-binary>=2.9.9
 
-google-generativeai>=0.8.0
-
+# Utilities
 python-dateutil==2.8.2
 pytz==2023.3
+
+# Google Gemini
+google-generativeai>=0.8.0
