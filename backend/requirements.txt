@@ -9,18 +9,13 @@ sqlalchemy>=2.0.36
 alembic>=1.14.0
 python-dotenv==1.0.0
 
-# PDF rendering (Railway compatible)
-pymupdf>=1.24.10
-
-# OCR engine
-rapidocr>=3.4.2
-
+pymupdf>=1.24.10  # PDF to image
 Pillow>=10.3.0
 python-magic
 
 psycopg2-binary>=2.9.9
 
+google-generativeai>=0.8.0
+
 python-dateutil==2.8.2
 pytz==2023.3
-
-google-generativeai>=0.8.0
