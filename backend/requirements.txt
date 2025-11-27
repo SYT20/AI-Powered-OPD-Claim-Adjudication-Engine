@@ -19,7 +19,7 @@ python-dotenv==1.0.0
 docling>=2.63.0
 docling-core>=2.49.0
 rapidocr>=3.4.2
-onnxruntime>=1.18.0 
+onnxruntime-openvino
 
 Pillow>=10.3.0
 python-magic
