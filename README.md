@@ -379,11 +379,8 @@ This project is created as part of an internship assignment.
 - **Google Gemini** - For LLM capabilities
 - **Docling** - For OCR functionality
 - **FastAPI** - For the excellent web framework
-
----
-
-**Built with ❤️ for automated insurance claim processing**
 #
+
 
 
 
