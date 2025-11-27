@@ -82,8 +82,6 @@ The system follows a layered architecture with clear separation of concerns:
 ![Rule Enginw Diagram](RuleEngine.png)
 ![Decision Engine Diagram](DecisionEngine.png)
 
-For detailed flow diagrams, see [OPD_CLAIM_FLOW_DIAGRAMS.md](./OPD_CLAIM_FLOW_DIAGRAMS.md)
-
 ## 📦 Prerequisites
 
 Before you begin, ensure you have the following installed:
@@ -386,6 +384,7 @@ This project is created as part of an internship assignment.
 
 **Built with ❤️ for automated insurance claim processing**
 #
+
 
 
 
