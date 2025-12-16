@@ -7,7 +7,7 @@ import base64
 
 logger = logging.getLogger(__name__)
 
-model = GenerativeModel("gemini-2.0-flash")
+model = GenerativeModel("gemini-2.5-flash")
 
 
 class OCRService:
@@ -33,7 +33,7 @@ class OCRService:
                     [
                         {
                             "mime_type": "image/png",
-                            "data": encoded
+                            "data": png_bytes
                         },
                         "Extract ALL text from this page."
                     ]
