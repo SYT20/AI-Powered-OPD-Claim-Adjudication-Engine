@@ -12,7 +12,7 @@ genai.configure(api_key=settings.GEMINI_API_KEY)
 
 class LLMService:
     def __init__(self):
-        self.model = genai.GenerativeModel('gemini-2.0-flash')
+        self.model = genai.GenerativeModel('gemini-2.5-flash')
     
     def _parse_json_response(self, response_text: str) -> Dict[str, Any]:
         cleaned_text = response_text.strip()
