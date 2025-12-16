@@ -8,6 +8,10 @@ import type {
     ClaimFilters
 } from '../types';
 
+/* ===========================
+   AXIOS INSTANCE
+=========================== */
+
 const api = axios.create({
     baseURL: 'https://jarrod-pseudomorular-caitlin.ngrok-free.dev',
     headers: {
@@ -16,20 +20,26 @@ const api = axios.create({
 });
 
 /* ===========================
+   HELPERS
+=========================== */
+
+const normalizeArray = <T>(data: any, label: string): T[] => {
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data?.data)) return data.data;
+    if (Array.isArray(data?.items)) return data.items;
+
+    console.error(`Unexpected ${label} response shape:`, data);
+    return [];
+};
+
+/* ===========================
    MEMBERS
 =========================== */
 
 export const fetchMembers = async (): Promise<Member[]> => {
     try {
         const response = await api.get('/members');
-        const data = response.data;
-
-        if (Array.isArray(data)) return data;
-        if (Array.isArray(data?.members)) return data.members;
-        if (Array.isArray(data?.data)) return data.data;
-
-        console.error('Unexpected /members response shape:', data);
-        return [];
+        return normalizeArray<Member>(response.data, 'members');
     } catch (error) {
         console.error('Error fetching members:', error);
         return [];
@@ -50,14 +60,14 @@ export const getMember = async (memberId: string): Promise<Member | null> => {
    CLAIMS
 =========================== */
 
-export const submitClaim = async (formData: FormData): Promise<ClaimSubmitResponse> => {
+export const submitClaim = async (
+    formData: FormData
+): Promise<ClaimSubmitResponse> => {
     const response = await api.post<ClaimSubmitResponse>(
         '/claims',
         formData,
         {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
+            headers: { 'Content-Type': 'multipart/form-data' },
         }
     );
     return response.data;
@@ -73,17 +83,12 @@ export const getClaim = async (claimId: string): Promise<Claim | null> => {
     }
 };
 
-export const listClaims = async (filters?: ClaimFilters): Promise<Claim[]> => {
+export const listClaims = async (
+    filters?: ClaimFilters
+): Promise<Claim[]> => {
     try {
         const response = await api.get('/claims', { params: filters });
-        const data = response.data;
-
-        if (Array.isArray(data)) return data;
-        if (Array.isArray(data?.claims)) return data.claims;
-        if (Array.isArray(data?.data)) return data.data;
-
-        console.error('Unexpected /claims response shape:', data);
-        return [];
+        return normalizeArray<Claim>(response.data, 'claims');
     } catch (error) {
         console.error('Error listing claims:', error);
         return [];
@@ -94,17 +99,12 @@ export const listClaims = async (filters?: ClaimFilters): Promise<Claim[]> => {
    DOCUMENTS
 =========================== */
 
-export const getClaimDocuments = async (claimId: string): Promise<Document[]> => {
+export const getClaimDocuments = async (
+    claimId: string
+): Promise<Document[]> => {
     try {
         const response = await api.get(`/claims/${claimId}/documents`);
-        const data = response.data;
-
-        if (Array.isArray(data)) return data;
-        if (Array.isArray(data?.documents)) return data.documents;
-        if (Array.isArray(data?.data)) return data.data;
-
-        console.error('Unexpected documents response shape:', data);
-        return [];
+        return normalizeArray<Document>(response.data, 'documents');
     } catch (error) {
         console.error(`Error fetching documents for claim ${claimId}:`, error);
         return [];
@@ -112,10 +112,12 @@ export const getClaimDocuments = async (claimId: string): Promise<Document[]> =>
 };
 
 /* ===========================
-   DECISION
+   DECISIONS
 =========================== */
 
-export const getDecision = async (claimId: string): Promise<Decision | null> => {
+export const getDecision = async (
+    claimId: string
+): Promise<Decision | null> => {
     try {
         const response = await api.get(`/decisions/${claimId}`);
         return response.data ?? null;
