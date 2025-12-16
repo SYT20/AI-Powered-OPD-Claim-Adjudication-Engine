@@ -9,49 +9,120 @@ import type {
 } from '../types';
 
 const api = axios.create({
-    baseURL: `https://jarrod-pseudomorular-caitlin.ngrok-free.dev`,
+    baseURL: 'https://jarrod-pseudomorular-caitlin.ngrok-free.dev',
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
+/* ===========================
+   MEMBERS
+=========================== */
+
 export const fetchMembers = async (): Promise<Member[]> => {
-    const response = await api.get<Member[]>('/members');
-    return response.data;
+    try {
+        const response = await api.get('/members');
+        const data = response.data;
+
+        if (Array.isArray(data)) return data;
+        if (Array.isArray(data?.members)) return data.members;
+        if (Array.isArray(data?.data)) return data.data;
+
+        console.error('Unexpected /members response shape:', data);
+        return [];
+    } catch (error) {
+        console.error('Error fetching members:', error);
+        return [];
+    }
 };
 
-export const getMember = async (memberId: string): Promise<Member> => {
-    const response = await api.get<Member>(`/members/${memberId}`);
-    return response.data;
+export const getMember = async (memberId: string): Promise<Member | null> => {
+    try {
+        const response = await api.get(`/members/${memberId}`);
+        return response.data ?? null;
+    } catch (error) {
+        console.error(`Error fetching member ${memberId}:`, error);
+        return null;
+    }
 };
+
+/* ===========================
+   CLAIMS
+=========================== */
 
 export const submitClaim = async (formData: FormData): Promise<ClaimSubmitResponse> => {
-    const response = await api.post<ClaimSubmitResponse>('/claims', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    });
+    const response = await api.post<ClaimSubmitResponse>(
+        '/claims',
+        formData,
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        }
+    );
     return response.data;
 };
 
-export const getClaim = async (claimId: string): Promise<Claim> => {
-    const response = await api.get<Claim>(`/claims/${claimId}`);
-    return response.data;
+export const getClaim = async (claimId: string): Promise<Claim | null> => {
+    try {
+        const response = await api.get(`/claims/${claimId}`);
+        return response.data ?? null;
+    } catch (error) {
+        console.error(`Error fetching claim ${claimId}:`, error);
+        return null;
+    }
 };
 
 export const listClaims = async (filters?: ClaimFilters): Promise<Claim[]> => {
-    const response = await api.get<Claim[]>('/claims', { params: filters });
-    return response.data;
+    try {
+        const response = await api.get('/claims', { params: filters });
+        const data = response.data;
+
+        if (Array.isArray(data)) return data;
+        if (Array.isArray(data?.claims)) return data.claims;
+        if (Array.isArray(data?.data)) return data.data;
+
+        console.error('Unexpected /claims response shape:', data);
+        return [];
+    } catch (error) {
+        console.error('Error listing claims:', error);
+        return [];
+    }
 };
+
+/* ===========================
+   DOCUMENTS
+=========================== */
 
 export const getClaimDocuments = async (claimId: string): Promise<Document[]> => {
-    const response = await api.get<Document[]>(`/claims/${claimId}/documents`);
-    return response.data;
+    try {
+        const response = await api.get(`/claims/${claimId}/documents`);
+        const data = response.data;
+
+        if (Array.isArray(data)) return data;
+        if (Array.isArray(data?.documents)) return data.documents;
+        if (Array.isArray(data?.data)) return data.data;
+
+        console.error('Unexpected documents response shape:', data);
+        return [];
+    } catch (error) {
+        console.error(`Error fetching documents for claim ${claimId}:`, error);
+        return [];
+    }
 };
 
-export const getDecision = async (claimId: string): Promise<Decision> => {
-    const response = await api.get<Decision>(`/decisions/${claimId}`);
-    return response.data;
+/* ===========================
+   DECISION
+=========================== */
+
+export const getDecision = async (claimId: string): Promise<Decision | null> => {
+    try {
+        const response = await api.get(`/decisions/${claimId}`);
+        return response.data ?? null;
+    } catch (error) {
+        console.error(`Error fetching decision for claim ${claimId}:`, error);
+        return null;
+    }
 };
 
 export default api;
