@@ -9,7 +9,7 @@ import type {
 } from '../types';
 
 const api = axios.create({
-    baseURL: `https://ai-powered-opd-claim-adjudication-engine-production.up.railway.app/api/v1`,
+    baseURL: `https://jarrod-pseudomorular-caitlin.ngrok-free.dev`,
     headers: {
         'Content-Type': 'application/json',
     },
